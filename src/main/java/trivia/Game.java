@@ -4,6 +4,12 @@ import java.util.*;
 
 // REFACTOR ME
 public class Game implements IGame {
+    public static final int MAX_NUMBER_OF_QUESTIONS = 50;
+    public static final String POP = "Pop";
+    public static final String SCIENCE = "Science";
+    public static final String SPORTS = "Sports";
+    public static final String ROCK = "Rock";
+
     List<Player> players = new ArrayList<>();
 
     Deque<String> popQuestions = new ArrayDeque<>();
@@ -28,11 +34,11 @@ public class Game implements IGame {
     boolean isGettingOutOfPenaltyBox;
 
     public Game() {
-        for (int i = 0; i < 50; i++) {
-            popQuestions.addLast(createQuestion("Pop", i));
-            scienceQuestions.addLast(createQuestion("Science", i));
-            sportsQuestions.addLast(createQuestion("Sports", i));
-            rockQuestions.addLast(createQuestion("Rock", i));
+        for (int i = 0; i < MAX_NUMBER_OF_QUESTIONS; i++) {
+            popQuestions.addLast(createQuestion(POP, i));
+            scienceQuestions.addLast(createQuestion(SCIENCE, i));
+            sportsQuestions.addLast(createQuestion(SPORTS, i));
+            rockQuestions.addLast(createQuestion(ROCK, i));
         }
     }
 
@@ -74,7 +80,7 @@ public class Game implements IGame {
         currentNewPlayer.place = currentNewPlayer.place + roll;
 
         if (currentNewPlayer.place > 12) {
-            currentNewPlayer.place = currentNewPlayer.place - 12;
+            currentNewPlayer.place = currentNewPlayer.place % 12;
         }
 
         System.out.println(currentNewPlayer.name
@@ -87,20 +93,20 @@ public class Game implements IGame {
     private void askQuestion() {
         String currentCategory = currentCategory();
         switch (currentCategory) {
-            case "Pop" -> System.out.println(popQuestions.removeFirst());
-            case "Science" -> System.out.println(scienceQuestions.removeFirst());
-            case "Sports" -> System.out.println(sportsQuestions.removeFirst());
-            case "Rock" -> System.out.println(rockQuestions.removeFirst());
+            case POP -> System.out.println(popQuestions.removeFirst());
+            case SCIENCE -> System.out.println(scienceQuestions.removeFirst());
+            case SPORTS -> System.out.println(sportsQuestions.removeFirst());
+            case ROCK -> System.out.println(rockQuestions.removeFirst());
         }
     }
 
     private String currentCategory() {
         int index = currentPlayer().place - 1;
         return switch (index % 4) {
-            case 0 -> "Pop";
-            case 1 -> "Science";
-            case 2 -> "Sports";
-            default -> "Rock";
+            case 0 -> POP;
+            case 1 -> SCIENCE;
+            case 2 -> SPORTS;
+            default -> ROCK;
         };
     }
 
