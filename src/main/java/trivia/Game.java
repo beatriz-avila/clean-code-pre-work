@@ -98,19 +98,14 @@ public class Game implements IGame {
         }
     }
 
-
     private String currentCategory() {
-        int place = currentPlayer().place;
-        if (place - 1 == 0) return "Pop";
-        if (place - 1 == 4) return "Pop";
-        if (place - 1 == 8) return "Pop";
-        if (place - 1 == 1) return "Science";
-        if (place - 1 == 5) return "Science";
-        if (place - 1 == 9) return "Science";
-        if (place - 1 == 2) return "Sports";
-        if (place - 1 == 6) return "Sports";
-        if (place - 1 == 10) return "Sports";
-        return "Rock";
+        int index = currentPlayer().place - 1;
+        return switch (index % 4) {
+            case 0 -> "Pop";
+            case 1 -> "Science";
+            case 2 -> "Sports";
+            default -> "Rock";
+        };
     }
 
     public boolean handleCorrectAnswer() {
