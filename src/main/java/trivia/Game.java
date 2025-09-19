@@ -53,17 +53,17 @@ public class Game implements IGame {
     }
 
     public void roll(int roll) {
-        System.out.println(players.get(currentPlayer).name + " is the current player");
+        System.out.println(currentPlayer().name + " is the current player");
         System.out.println("They have rolled a " + roll);
 
-        if (players.get(currentPlayer).inPenaltyBox) {
+        if (currentPlayer().inPenaltyBox) {
             if (roll % 2 != 0) {
                 isGettingOutOfPenaltyBox = true;
 
-                System.out.println(players.get(currentPlayer).name + " is getting out of the penalty box");
+                System.out.println(currentPlayer().name + " is getting out of the penalty box");
                 handleRoll(roll);
             } else {
-                System.out.println(players.get(currentPlayer).name + " is not getting out of the penalty box");
+                System.out.println(currentPlayer().name + " is not getting out of the penalty box");
                 isGettingOutOfPenaltyBox = false;
             }
 
@@ -74,7 +74,7 @@ public class Game implements IGame {
     }
 
     private void handleRoll(int roll) {
-        Player currentNewPlayer = players.get(currentPlayer);
+        Player currentNewPlayer = currentPlayer();
         currentNewPlayer.place = currentNewPlayer.place + roll;
 
         if (currentNewPlayer.place > 12) {
@@ -89,19 +89,18 @@ public class Game implements IGame {
     }
 
     private void askQuestion() {
-        if (currentCategory() == "Pop")
-            System.out.println(popQuestions.removeFirst());
-        if (currentCategory() == "Science")
-            System.out.println(scienceQuestions.removeFirst());
-        if (currentCategory() == "Sports")
-            System.out.println(sportsQuestions.removeFirst());
-        if (currentCategory() == "Rock")
-            System.out.println(rockQuestions.removeFirst());
+        String currentCategory = currentCategory();
+        switch (currentCategory) {
+            case "Pop" -> System.out.println(popQuestions.removeFirst());
+            case "Science" -> System.out.println(scienceQuestions.removeFirst());
+            case "Sports" -> System.out.println(sportsQuestions.removeFirst());
+            case "Rock" -> System.out.println(rockQuestions.removeFirst());
+        }
     }
 
 
     private String currentCategory() {
-        int place = players.get(currentPlayer).place;
+        int place = currentPlayer().place;
         if (place - 1 == 0) return "Pop";
         if (place - 1 == 4) return "Pop";
         if (place - 1 == 8) return "Pop";
@@ -115,7 +114,7 @@ public class Game implements IGame {
     }
 
     public boolean handleCorrectAnswer() {
-        if (players.get(currentPlayer).inPenaltyBox) {
+        if (currentPlayer().inPenaltyBox) {
             if (isGettingOutOfPenaltyBox) {
                 return handleWinner2();
             } else {
@@ -133,9 +132,9 @@ public class Game implements IGame {
 
     private boolean handleWinner2() {
         System.out.println("Answer was correct!!!!");
-        Player currentNewPlayer = players.get(currentPlayer);
+        Player currentNewPlayer = currentPlayer();
         currentNewPlayer.purse++;
-        System.out.println(players.get(currentPlayer).name
+        System.out.println(currentPlayer().name
                 + " now has "
                 + currentNewPlayer.purse
                 + " Gold Coins.");
@@ -149,16 +148,19 @@ public class Game implements IGame {
 
     public boolean wrongAnswer() {
         System.out.println("Question was incorrectly answered");
-        System.out.println(players.get(currentPlayer).name + " was sent to the penalty box");
-        players.get(currentPlayer).inPenaltyBox = true;
+        System.out.println(currentPlayer().name + " was sent to the penalty box");
+        currentPlayer().inPenaltyBox = true;
 
         currentPlayer++;
         if (currentPlayer == players.size()) currentPlayer = 0;
         return true;
     }
 
-
     private boolean didPlayerWin() {
-        return !(players.get(currentPlayer).purse == 6);
+        return !(currentPlayer().purse == 6);
+    }
+
+    private Player currentPlayer() {
+        return players.get(currentPlayer);
     }
 }
