@@ -101,30 +101,34 @@ public class Game implements IGame {
     }
 
     private String currentCategory() {
-        int index = currentPlayer().place - 1;
+        int index = currentPlayer().place;
         return switch (index % 4) {
-            case 0 -> POP;
-            case 1 -> SCIENCE;
-            case 2 -> SPORTS;
-            default -> ROCK;
+            case 0 -> ROCK;
+            case 1 -> POP;
+            case 2 -> SCIENCE;
+            default -> SPORTS;
         };
     }
 
     public boolean handleCorrectAnswer() {
         if (currentPlayer().inPenaltyBox) {
             if (isGettingOutOfPenaltyBox) {
-                return handleWinner2();
+                return handleRound();
             } else {
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
+                nextPlayer();
                 return true;
             }
         } else {
-            return handleWinner2();
+            return handleRound();
         }
     }
 
-    private boolean handleWinner2() {
+    private void nextPlayer() {
+        currentPlayer++;
+        if (currentPlayer == players.size()) currentPlayer = 0;
+    }
+
+    private boolean handleRound() {
         System.out.println("Answer was correct!!!!");
         Player currentNewPlayer = currentPlayer();
         currentNewPlayer.purse++;
@@ -134,8 +138,7 @@ public class Game implements IGame {
                 + " Gold Coins.");
 
         boolean winner = didPlayerWin();
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
+        nextPlayer();
 
         return winner;
     }
@@ -145,8 +148,7 @@ public class Game implements IGame {
         System.out.println(currentPlayer().name + " was sent to the penalty box");
         currentPlayer().inPenaltyBox = true;
 
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
+        nextPlayer();
         return true;
     }
 
