@@ -4,8 +4,6 @@ import java.util.*;
 
 // REFACTOR ME
 public class Game implements IGame {
-    boolean[] inPenaltyBox = new boolean[6];
-
     List<Player> newPlayers = new ArrayList<>();
 
     Deque<String> popQuestions = new ArrayDeque<>();
@@ -42,27 +40,22 @@ public class Game implements IGame {
     }
 
     public boolean isPlayable() {
-        return (howManyPlayers() >= 2);
+        return (newPlayers.size() >= 2);
     }
 
     public boolean add(String playerName) {
         newPlayers.add(new Player(playerName));
-        inPenaltyBox[howManyPlayers()] = false;
 
         System.out.println(playerName + " was added");
         System.out.println("They are player number " + newPlayers.size());
         return true;
     }
 
-    public int howManyPlayers() {
-        return newPlayers.size();
-    }
-
     public void roll(int roll) {
         System.out.println(newPlayers.get(currentPlayer).name + " is the current player");
         System.out.println("They have rolled a " + roll);
 
-        if (inPenaltyBox[currentPlayer]) {
+        if (newPlayers.get(currentPlayer).inPenaltyBox) {
             if (roll % 2 != 0) {
                 isGettingOutOfPenaltyBox = true;
 
@@ -121,7 +114,7 @@ public class Game implements IGame {
     }
 
     public boolean handleCorrectAnswer() {
-        if (inPenaltyBox[currentPlayer]) {
+        if (newPlayers.get(currentPlayer).inPenaltyBox) {
             if (isGettingOutOfPenaltyBox) {
                 return handleWinner2();
             } else {
@@ -156,7 +149,7 @@ public class Game implements IGame {
     public boolean wrongAnswer() {
         System.out.println("Question was incorrectly answered");
         System.out.println(newPlayers.get(currentPlayer).name + " was sent to the penalty box");
-        inPenaltyBox[currentPlayer] = true;
+        newPlayers.get(currentPlayer).inPenaltyBox = true;
 
         currentPlayer++;
         if (currentPlayer == newPlayers.size()) currentPlayer = 0;
