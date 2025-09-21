@@ -25,8 +25,18 @@ public class Game implements IGame {
 
         public Player(String name) {
             this.name = name;
-            this.place = 1;
+            this.place = 0;
             this.inPenaltyBox = false;
+        }
+
+        public void moveForward(int roll) {
+            place = (place+roll)%12;
+        }
+
+        public  void displayLocation() {
+            System.out.println(this.name
+                    + "'s new location is "
+                    + (this.place+1));
         }
     }
 
@@ -61,7 +71,7 @@ public class Game implements IGame {
         if (currentPlayer().inPenaltyBox) {
             if (roll % 2 != 0) {
                 isGettingOutOfPenaltyBox = true;
-
+                currentPlayer().inPenaltyBox = false;
                 System.out.println(currentPlayer().name + " is getting out of the penalty box");
                 handleRoll(roll);
             } else {
@@ -77,21 +87,15 @@ public class Game implements IGame {
 
     private void handleRoll(int roll) {
         Player currentNewPlayer = currentPlayer();
-        currentNewPlayer.place = currentNewPlayer.place + roll;
-
-        if (currentNewPlayer.place > 12) {
-            currentNewPlayer.place = currentNewPlayer.place % 12;
-        }
-
-        System.out.println(currentNewPlayer.name
-                + "'s new location is "
-                + currentNewPlayer.place);
-        System.out.println("The category is " + currentCategory());
-        askQuestion();
+        currentNewPlayer.moveForward(roll);
+        currentNewPlayer.displayLocation();
+        String category = currentCategory();
+        System.out.println("The category is " + category);
+        askQuestion(category);
     }
 
-    private void askQuestion() {
-        String currentCategory = currentCategory();
+
+    private void askQuestion(String currentCategory) {
         switch (currentCategory) {
             case POP -> System.out.println(popQuestions.removeFirst());
             case SCIENCE -> System.out.println(scienceQuestions.removeFirst());
@@ -103,21 +107,18 @@ public class Game implements IGame {
     private String currentCategory() {
         int index = currentPlayer().place;
         return switch (index % 4) {
-            case 0 -> ROCK;
-            case 1 -> POP;
-            case 2 -> SCIENCE;
-            default -> SPORTS;
+
+            case 0 -> POP;
+            case 1 -> SCIENCE;
+            case 2 -> SPORTS;
+            default -> ROCK;
         };
     }
 
     public boolean handleCorrectAnswer() {
         if (currentPlayer().inPenaltyBox) {
-            if (isGettingOutOfPenaltyBox) {
-                return handleRound();
-            } else {
-                nextPlayer();
-                return true;
-            }
+            nextPlayer();
+            return true;
         } else {
             return handleRound();
         }
@@ -136,24 +137,21 @@ public class Game implements IGame {
                 + " now has "
                 + currentNewPlayer.purse
                 + " Gold Coins.");
-
-        boolean winner = didPlayerWin();
+        boolean winner = checkWinCondition();
         nextPlayer();
-
-        return winner;
+        return !winner;
     }
 
     public boolean wrongAnswer() {
         System.out.println("Question was incorrectly answered");
         System.out.println(currentPlayer().name + " was sent to the penalty box");
         currentPlayer().inPenaltyBox = true;
-
         nextPlayer();
         return true;
     }
 
-    private boolean didPlayerWin() {
-        return !(currentPlayer().purse == 6);
+    private boolean checkWinCondition() {
+        return (currentPlayer().purse == 6);
     }
 
     private Player currentPlayer() {
