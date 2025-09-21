@@ -86,14 +86,13 @@ public class Game implements IGame {
         Player currentNewPlayer = currentPlayer;
         currentNewPlayer.moveForward(roll);
         currentNewPlayer.displayLocation();
-        String category = currentCategory();
-        System.out.println("The category is " + category);
-        askQuestion(category);
+        askQuestion();
     }
 
-
-    private void askQuestion(String currentCategory) {
-        switch (currentCategory) {
+    private void askQuestion() {
+        String category = currentCategory();
+        System.out.println("The category is " + category);
+        switch (category) {
             case POP -> System.out.println(popQuestions.removeFirst());
             case SCIENCE -> System.out.println(scienceQuestions.removeFirst());
             case SPORTS -> System.out.println(sportsQuestions.removeFirst());
@@ -101,8 +100,7 @@ public class Game implements IGame {
         }
     }
     private String currentCategory() {
-        int index = currentPlayer.place;
-        return switch (index % DECK_NUMBER) {
+        return switch (currentPlayer.place % DECK_NUMBER) {
             case 0 -> POP;
             case 1 -> SCIENCE;
             case 2 -> SPORTS;
@@ -126,7 +124,6 @@ public class Game implements IGame {
                 + currentPlayer.purse
                 + " Gold Coins.");
     }
-
     public boolean wrongAnswer() {
         System.out.println("Question was incorrectly answered");
         System.out.println(currentPlayer.name + " was sent to the penalty box");
