@@ -47,7 +47,6 @@ public class Game implements IGame {
 
     public boolean add(String playerName) {
         players.add(new Player(playerName));
-
         System.out.println(playerName + " was added");
         System.out.println("They are player number " + players.size());
         return true;
@@ -59,19 +58,21 @@ public class Game implements IGame {
         System.out.println("They have rolled a " + roll);
 
         if (currentPlayer().inPenaltyBox) {
-            if (roll % 2 != 0) {
-                currentPlayer().inPenaltyBox = false;
-                System.out.println(currentPlayer().name + " is getting out of the penalty box");
-                handleRoll(roll);
-
-            } else {
-                System.out.println(currentPlayer().name + " is not getting out of the penalty box");
-            }
-
-        } else {
+            tryToExitPenaltyBox(roll);
+        }
+        if (!currentPlayer().inPenaltyBox) {
             handleRoll(roll);
         }
 
+    }
+
+    private void tryToExitPenaltyBox(int roll) {
+        if (roll % 2 != 0) {
+            currentPlayer().inPenaltyBox = false;
+            System.out.println(currentPlayer().name + " is getting out of the penalty box");
+        } else {
+            System.out.println(currentPlayer().name + " is not getting out of the penalty box");
+        }
     }
 
     private void handleRoll(int roll) {
