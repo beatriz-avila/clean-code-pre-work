@@ -30,7 +30,7 @@ public class Game implements IGame {
         }
     }
 
-    int currentPlayer = 0;
+    int currentPlayer = -1;
 
     public Game() {
         for (int i = 0; i < MAX_NUMBER_OF_QUESTIONS; i++) {
@@ -54,6 +54,7 @@ public class Game implements IGame {
     }
 
     public void roll(int roll) {
+        advancePlayer();
         System.out.println(currentPlayer().name + " is the current player");
         System.out.println("They have rolled a " + roll);
 
@@ -109,20 +110,15 @@ public class Game implements IGame {
     }
 
     public boolean handleCorrectAnswer() {
-        boolean notAWinner = true;
         if (!currentPlayer().inPenaltyBox) {
             System.out.println("Answer was correct!!!!");
-            Player currentNewPlayer = currentPlayer();
-            currentNewPlayer.purse++;
+            currentPlayer().purse++;
             System.out.println(currentPlayer().name
                     + " now has "
-                    + currentNewPlayer.purse
+                    + currentPlayer().purse
                     + " Gold Coins.");
-
-            notAWinner = didPlayerWin();
         }
-        advancePlayer();
-        return notAWinner;
+        return gameShouldContinue();
     }
 
     private void advancePlayer() {
@@ -136,11 +132,10 @@ public class Game implements IGame {
         System.out.println(currentPlayer().name + " was sent to the penalty box");
         currentPlayer().inPenaltyBox = true;
 
-        advancePlayer();
         return true;
     }
 
-    private boolean didPlayerWin() {
+    private boolean gameShouldContinue() {
         return !(currentPlayer().purse == 6);
     }
 
