@@ -133,7 +133,6 @@ public class Game implements IGame {
         System.out.println("Question was incorrectly answered");
         System.out.println(currentPlayer().name + " was sent to the penalty box");
         currentPlayer().inPenaltyBox = true;
-
         return true;
     }
 
