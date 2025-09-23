@@ -31,7 +31,6 @@ public class Game implements IGame {
     }
 
     int currentPlayer = 0;
-    boolean isGettingOutOfPenaltyBox;
 
     public Game() {
         for (int i = 0; i < MAX_NUMBER_OF_QUESTIONS; i++) {
@@ -60,14 +59,12 @@ public class Game implements IGame {
 
         if (currentPlayer().inPenaltyBox) {
             if (roll % 2 != 0) {
-                isGettingOutOfPenaltyBox = true;
-
+                currentPlayer().inPenaltyBox = false;
                 System.out.println(currentPlayer().name + " is getting out of the penalty box");
                 handleRoll(roll);
-                currentPlayer().inPenaltyBox = false;
+
             } else {
                 System.out.println(currentPlayer().name + " is not getting out of the penalty box");
-                isGettingOutOfPenaltyBox = false;
             }
 
         } else {
@@ -112,18 +109,15 @@ public class Game implements IGame {
     }
 
     public boolean handleCorrectAnswer() {
-        if (currentPlayer().inPenaltyBox) {
-            if (isGettingOutOfPenaltyBox) {
-                return handleWinner2();
-            } else {
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
-                return true;
-            }
-        } else {
+        if (!currentPlayer().inPenaltyBox) {
             return handleWinner2();
+        } else {
+            currentPlayer++;
+            if (currentPlayer == players.size()) currentPlayer = 0;
+            return true;
         }
     }
+
 
     private boolean handleWinner2() {
         System.out.println("Answer was correct!!!!");
