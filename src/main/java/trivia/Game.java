@@ -100,12 +100,13 @@ public class Game implements IGame {
     }
 
     private String currentCategory() {
-        int index = currentPlayer().place - 1;
+        int index = currentPlayer().place;
         return switch (index % 4) {
-            case 0 -> POP;
-            case 1 -> SCIENCE;
-            case 2 -> SPORTS;
-            default -> ROCK;
+            case 0 -> ROCK;
+            case 1 -> POP;
+            case 2 -> SCIENCE;
+            default -> SPORTS;
+
         };
     }
 
