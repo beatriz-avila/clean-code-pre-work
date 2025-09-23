@@ -68,6 +68,7 @@ public class GameOld implements IGame {
                                + places[currentPlayer]);
             System.out.println("The category is " + currentCategory());
             askQuestion();
+            inPenaltyBox[currentPlayer] = false;
          } else {
             System.out.println(players.get(currentPlayer) + " is not getting out of the penalty box");
             isGettingOutOfPenaltyBox = false;
