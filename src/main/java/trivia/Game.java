@@ -109,39 +109,34 @@ public class Game implements IGame {
     }
 
     public boolean handleCorrectAnswer() {
+        boolean notAWinner = true;
         if (!currentPlayer().inPenaltyBox) {
-            return handleWinner2();
-        } else {
-            currentPlayer++;
-            if (currentPlayer == players.size()) currentPlayer = 0;
-            return true;
+            System.out.println("Answer was correct!!!!");
+            Player currentNewPlayer = currentPlayer();
+            currentNewPlayer.purse++;
+            System.out.println(currentPlayer().name
+                    + " now has "
+                    + currentNewPlayer.purse
+                    + " Gold Coins.");
+
+            notAWinner = didPlayerWin();
         }
+        advancePlayer();
+        return notAWinner;
     }
 
-
-    private boolean handleWinner2() {
-        System.out.println("Answer was correct!!!!");
-        Player currentNewPlayer = currentPlayer();
-        currentNewPlayer.purse++;
-        System.out.println(currentPlayer().name
-                + " now has "
-                + currentNewPlayer.purse
-                + " Gold Coins.");
-
-        boolean winner = didPlayerWin();
+    private void advancePlayer() {
         currentPlayer++;
         if (currentPlayer == players.size()) currentPlayer = 0;
-
-        return winner;
     }
+
 
     public boolean wrongAnswer() {
         System.out.println("Question was incorrectly answered");
         System.out.println(currentPlayer().name + " was sent to the penalty box");
         currentPlayer().inPenaltyBox = true;
 
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
+        advancePlayer();
         return true;
     }
 
